@@ -4086,6 +4086,7 @@ function Library:CreateWindow(WindowInfo)
             Position = UDim2.new(0.3, 8, 0.5, 0),
             Size = UDim2.new(0.7, -57, 1, -16),
             TextScaled = true,
+            Visible = false, -- Hide initially
             Parent = TopBar,
         })
         New("UICorner", {
@@ -4104,8 +4105,23 @@ function Library:CreateWindow(WindowInfo)
             Parent = SearchBox,
         })
 
+        -- Create a search button
+        local SearchButton = New("ImageButton", {
+            AnchorPoint = Vector2.new(0, 0.5),
+            BackgroundTransparency = 1,
+            Position = UDim2.new(0.3, 8, 0.5, 0),
+            Size = UDim2.fromOffset(24, 24),
+            Parent = TopBar,
+        })
+
+        -- Add the search icon to the button
         local SearchIcon = Library:GetIcon("search")
         if SearchIcon then
+            SearchButton.Image = SearchIcon.Url
+            SearchButton.ImageColor3 = Library.Scheme.FontColor
+            SearchButton.ImageRectOffset = SearchIcon.ImageRectOffset
+            SearchButton.ImageRectSize = SearchIcon.ImageRectSize
+            
             New("ImageLabel", {
                 Image = SearchIcon.Url,
                 ImageColor3 = "FontColor",
@@ -4117,6 +4133,42 @@ function Library:CreateWindow(WindowInfo)
                 Parent = SearchBox,
             })
         end
+
+        -- Add the toggle functionality with animation
+        SearchButton.MouseButton1Click:Connect(function()
+            if not SearchBox.Visible then
+                -- Show and animate
+                SearchBox.Size = UDim2.new(0, 0, 1, -16)
+                SearchBox.Visible = true
+                
+                TweenService:Create(
+                    SearchBox, 
+                    TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                    {Size = UDim2.new(0.7, -57, 1, -16)}
+                ):Play()
+                
+                SearchBox:CaptureFocus()
+            else
+                -- Animate and hide
+                local hideTween = TweenService:Create(
+                    SearchBox, 
+                    TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
+                    {Size = UDim2.new(0, 0, 1, -16)}
+                )
+                
+                hideTween.Completed:Connect(function()
+                    SearchBox.Visible = false
+                end)
+                
+                hideTween:Play()
+            end
+        end)
+
+        -- Optional: Hide search box when focus is lost
+        SearchBox.FocusLost:Connect(function()
+            -- Uncomment the line below if you want the search box to hide when focus is lost
+            -- SearchBox.Visible = false
+        end)
 
         local MoveIcon = Library:GetIcon("move")
         if MoveIcon then
