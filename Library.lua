@@ -3349,10 +3349,9 @@ do
             Size = UDim2.fromOffset(16, 16),
             Parent = Display,
         })
-
-        local SearchBox
+        local DropdownSearchBox
         if Info.Searchable then
-            SearchBox = New("TextBox", {
+            DropdownSearchBox = New("TextBox", {
                 BackgroundTransparency = 1,
                 PlaceholderText = "Search...",
                 Position = UDim2.fromOffset(-8, 0),
@@ -3364,8 +3363,10 @@ do
             })
             New("UIPadding", {
                 PaddingLeft = UDim.new(0, 8),
-                Parent = SearchBox,
+                Parent = DropdownSearchBox,
             })
+            
+            DropdownSearchBox:GetPropertyChangedSignal("Text"):Connect(Dropdown.BuildDropdownList)
         end
 
         local MenuTable = Library:AddContextMenu(
@@ -3378,12 +3379,12 @@ do
             end,
             2,
             function(Active: boolean)
-                Display.TextTransparency = (Active and SearchBox) and 1 or 0
+                Display.TextTransparency = (Active and DropdownSearchBox) and 1 or 0
                 ArrowImage.ImageTransparency = Active and 0 or 0.5
                 ArrowImage.Rotation = Active and 180 or 0
-                if SearchBox then
-                    SearchBox.Text = ""
-                    SearchBox.Visible = Active
+                if DropdownSearchBox then
+                    DropdownSearchBox.Text = ""
+                    DropdownSearchBox.Visible = Active
                 end
             end
         )
@@ -4084,9 +4085,9 @@ function Library:CreateWindow(WindowInfo)
             BackgroundColor3 = "MainColor",
             PlaceholderText = "Search",
             Position = UDim2.new(0.3, 8, 0.5, 0),
-            Size = UDim2.new(0.7, -57, 1, -16),
+            Size = UDim2.new(0, 0, 1, -16), -- Start with zero width for animation
             TextScaled = true,
-            Visible = false, -- Hide initially
+            Visible = false,
             Parent = TopBar,
         })
         New("UICorner", {
@@ -4135,6 +4136,10 @@ function Library:CreateWindow(WindowInfo)
         end
 
         -- Add the toggle functionality with animation
+        -- Ensure SearchBox is hidden at startup
+        SearchBox.Visible = false
+        SearchBox.Size = UDim2.new(0, 0, 1, -16)
+        
         SearchButton.MouseButton1Click:Connect(function()
             if not SearchBox.Visible then
                 -- Show and animate
