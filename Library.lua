@@ -3355,8 +3355,8 @@ do
                 BackgroundTransparency = 1,
                 PlaceholderText = "Search...",
                 Position = UDim2.fromOffset(-8, 0),
-                Size = UDim2.new(1, -12, 1, 0),
-                TextSize = 14,
+                Size = UDim2.new(0.8, -12, 0.8, 0),
+                TextSize = 12,
                 TextXAlignment = Enum.TextXAlignment.Left,
                 Visible = false,
                 Parent = Display,
@@ -3365,7 +3365,6 @@ do
                 PaddingLeft = UDim.new(0, 8),
                 Parent = DropdownSearchBox,
             })
-            
             DropdownSearchBox:GetPropertyChangedSignal("Text"):Connect(Dropdown.BuildDropdownList)
         end
 
