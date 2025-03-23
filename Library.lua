@@ -4105,8 +4105,7 @@ function Library:CreateWindow(WindowInfo)
             Color = "OutlineColor",
             Parent = SearchBox,
         })
-
-        -- Create a search button
+        -- Create a search button 
         local SearchButton = New("ImageButton", {
             AnchorPoint = Vector2.new(0, 0.5),
             BackgroundTransparency = 1,
@@ -4122,17 +4121,6 @@ function Library:CreateWindow(WindowInfo)
             SearchButton.ImageColor3 = Library.Scheme.FontColor
             SearchButton.ImageRectOffset = SearchIcon.ImageRectOffset
             SearchButton.ImageRectSize = SearchIcon.ImageRectSize
-            
-            New("ImageLabel", {
-                Image = SearchIcon.Url,
-                ImageColor3 = "FontColor",
-                ImageRectOffset = SearchIcon.ImageRectOffset,
-                ImageRectSize = SearchIcon.ImageRectSize,
-                ImageTransparency = 0.5,
-                Size = UDim2.fromScale(1, 1),
-                SizeConstraint = Enum.SizeConstraint.RelativeYY,
-                Parent = SearchBox,
-            })
         end
 
         -- Add the toggle functionality with animation
